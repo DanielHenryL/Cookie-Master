@@ -1,7 +1,8 @@
 import { ChangeEvent, FC, useEffect, useState } from "react"
 import { GetServerSideProps } from 'next'
-import {Card, CardHeader, CardContent, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio} from '@mui/material'
+import { Button, CardActions, Card, CardHeader, CardContent, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio} from '@mui/material'
 import Cookies from 'js-cookie'
+import axios from "axios"
 
 import { Layout } from "@/components/layout"
 
@@ -16,8 +17,13 @@ const ThemeChangerPage:FC = (props) => {
 
     useEffect(() => {
       setCurrentTheme(localStorage.getItem('theme') || '')
+      console.log('cookies:', Cookies.get('theme'))
     }, [])
     
+    const onClick = async() =>{
+        const { data } = await axios.get('/api/hello')
+        console.log({data})
+    }
   return (
     <Layout>
         <Card>
@@ -35,6 +41,14 @@ const ThemeChangerPage:FC = (props) => {
                     </RadioGroup>
                 </FormControl>
             </CardContent>
+            <CardActions>
+                <Button
+                    variant="outlined"
+                    onClick={ onClick }
+                >
+                    Solicitud
+                </Button>
+            </CardActions>
         </Card>
     </Layout>
   )
@@ -49,7 +63,7 @@ export const getServerSideProps: GetServerSideProps = async ({req}) => {
     return {
         props: {
             name,
-            theme
+            theme,
         }
     }
 }

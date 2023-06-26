@@ -5,10 +5,13 @@ import Cookies from 'js-cookie'
 import axios from "axios"
 
 import { Layout } from "@/components/layout"
+interface Props {
+    theme:string
+}
+const ThemeChangerPage:FC<Props> = ({theme}) => {
 
-const ThemeChangerPage:FC = (props) => {
-    console.log(props)
-    const [currentTheme, setCurrentTheme] = useState('light')
+    const [currentTheme, setCurrentTheme] = useState(theme)
+    
     const onThemeChange = ( event:ChangeEvent<HTMLInputElement>) => {
         setCurrentTheme( event.target.value)
         localStorage.setItem('theme',event.target.value)
@@ -16,7 +19,7 @@ const ThemeChangerPage:FC = (props) => {
     }
 
     useEffect(() => {
-      setCurrentTheme(localStorage.getItem('theme') || '')
+      console.log('Localstorage:', localStorage.getItem('theme'))
       console.log('cookies:', Cookies.get('theme'))
     }, [])
     
@@ -59,11 +62,13 @@ const ThemeChangerPage:FC = (props) => {
 
 export const getServerSideProps: GetServerSideProps = async ({req}) => {
     const { name='No name' , theme='light'} = req.cookies;
-   
+    
+    const validThemes = ['light', 'dark', 'custom']
+
     return {
         props: {
             name,
-            theme,
+            theme: validThemes.includes(theme) ? theme:'dark'
         }
     }
 }

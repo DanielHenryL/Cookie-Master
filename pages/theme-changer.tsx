@@ -1,13 +1,20 @@
 import { Layout } from "@/components/layout"
 import {Card, CardHeader, CardContent, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio} from '@mui/material'
-import { ChangeEvent, useState } from "react"
-
+import { ChangeEvent, useEffect, useState } from "react"
+import Cookies from 'js-cookie'
 
 const ThemeChangerPage = () => {
     const [currentTheme, setCurrentTheme] = useState('light')
     const onThemeChange = ( event:ChangeEvent<HTMLInputElement>) => {
         setCurrentTheme( event.target.value)
+        localStorage.setItem('theme',event.target.value)
+        Cookies.set('theme', event.target.value )
     }
+
+    useEffect(() => {
+      setCurrentTheme(localStorage.getItem('theme') || '')
+    }, [])
+    
   return (
     <Layout>
         <Card>
